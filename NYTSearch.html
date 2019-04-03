@@ -83,45 +83,53 @@
             e.preventDefault();
 
             // retrieve form values
-            var searchTerm = $('#searchTerm').val();
+            var searchTerm = $('#searchTerm').val().trim();
             var numberArts = $('#numberArts').val();
-            var startYear = $('#startYear').val();
-            var endYear = $('#endYear').val();
+            var startYear = $('#startYear').val().trim();
+            var endYear = $('#endYear').val().trim();
 
             // https://api.nytimes.com/svc/search/v2/articlesearch.json?q=election&api-key=mq7cDxjRGOSpTGcRLQYjwQvOfROSCE4O
             var queryURL = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" +
                 searchTerm + "&api-key=mq7cDxjRGOSpTGcRLQYjwQvOfROSCE4O";
 
-            console.log(searchTerm);
-            console.log(numberArts);
-            console.log(startYear);
-            console.log(endYear);
 
             $.ajax({
                 url: queryURL,
                 method: "GET"
-            }).then(function (response) {
-                console.log(response);
+            }).then(function (data) {
+                console.log(data);
+                var results = data.response;
 
-                $('#display-news').append(`
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                Card title
-                            </h5>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                Card subtitle
-                            </h6>
+                for ( var i = 0; i < numberArts; i++) {
+                    var docs = results.docs[i];
+                    var headline = results.docs[i].headline.main;
+                    var pubDate = results.docs[i].pub_date;
+                    var abstract = results.docs[i].abstract;
+                    var url = results.docs[i].web_url;
 
-                            <p class="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's content.
-                            </p>
-                            <a href="#" class="card-link">
-                                Card link
-                            </a>
+                    // Use of template literal to create HTML elements dynamically
+                    // Variables placed into corresponding elements
+                    $('#display-news').append(`
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    ${headline}
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    ${pubDate}
+                                </h6>
+                                <p class="card-text">
+                                    ${abstract}
+                                </p>
+                                <a class="card-link" href="${url}" target="_blank" rel="noopener noreferrer">
+                                    Read More!
+                                </a>
+                            </div>
                         </div>
-                    </div>
-                `);
+                    `);
+                }
+
+
             })
         });
     </script>
