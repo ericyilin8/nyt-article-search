@@ -100,33 +100,45 @@
                 console.log(data);
                 var results = data.response;
 
+
                 for ( var i = 0; i < numberArts; i++) {
                     var docs = results.docs[i];
-                    var headline = results.docs[i].headline.main;
-                    var pubDate = results.docs[i].pub_date;
-                    var abstract = results.docs[i].abstract;
-                    var url = results.docs[i].web_url;
+                    var headline = docs.headline.main;
+                    var pubDate = docs.pub_date;
+                    var snippet = docs.snippet;
+                    var url = docs.web_url;
 
-                    // Use of template literal to create HTML elements dynamically
-                    // Variables placed into corresponding elements
-                    $('#display-news').append(`
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    ${headline}
-                                </h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    ${pubDate}
-                                </h6>
-                                <p class="card-text">
-                                    ${abstract}
-                                </p>
-                                <a class="card-link" href="${url}" target="_blank" rel="noopener noreferrer">
-                                    Read More!
-                                </a>
+                    // get publication year
+                    var newDate = new Date(pubDate);
+                    var strDate = JSON.stringify(newDate);
+                    var pubYear = parseInt(strDate.substring(1, 5));
+
+
+                    // if (startYear <= pubYear && endYear >= pubYear) {
+                        // Use of template literal to create HTML elements dynamically
+                        // Variables placed into corresponding elements
+                        $('#display-news').append(`
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        ${headline}
+                                    </h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">
+                                        ${newDate}
+                                    </h6>
+                                    <p class="card-text">
+                                        ${snippet}
+                                    </p>
+                                    <a class="card-link" href="${url}" target="_blank" rel="noopener noreferrer">
+                                        Read More!
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                    `);
+                        `);
+
+                    // }
+
+
                 }
 
 
